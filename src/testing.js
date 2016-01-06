@@ -159,8 +159,8 @@ exports.PulseTestReceiver = PulseTestReceiver;
 
 
 /**
- * Test schemas with a positive and negative test cases. This will run call
- * `setuo` and `test` which is assumed to exist in global scope.
+ * Test schemas with a positive and negative test cases. This will call
+ * `setup` and `test` which are assumed to exist in global scope.
  * Basically, it only makes sense to use from inside `suite` in a mocha test.
  *
  * options:{
