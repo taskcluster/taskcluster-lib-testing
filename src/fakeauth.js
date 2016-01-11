@@ -18,7 +18,7 @@ var hawk = require('hawk');
  *
  * Call `stop` in your test's `after` method to stop the HTTP interceptor.
  */
-module.exports.start = function(clients) {
+exports.start = function(clients) {
   nock('https://auth.taskcluster.net:443', {encodedQueryParams:true, allowUnmocked: true})
   .persist()
   .filteringRequestBody(/.*/, '*')
@@ -46,7 +46,7 @@ module.exports.start = function(clients) {
   });
 };
 
-module.exports.stop = function() {
+exports.stop = function() {
   // this is a bit more aggressive than we want to be, since it clears
   // all nock interceptors, not just the one we installed.  See
   // https://github.com/pgte/nock/issues/438
