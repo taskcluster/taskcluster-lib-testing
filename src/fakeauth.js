@@ -1,6 +1,7 @@
 var debug = require('debug')('taskcluster-lib-testing:FakeAuth');
 var nock = require('nock');
 var hawk = require('hawk');
+var url  = require('url');
 
 exports.start = function(clients) {
   nock('https://auth.taskcluster.net:443', {encodedQueryParams:true, allowUnmocked: true})
@@ -32,7 +33,7 @@ exports.start = function(clients) {
       }
     }
     if (extend) {
-      var ext = JSON.parse(new Buffer(extend, 'base64').toString('utf-8'));
+      let ext = JSON.parse(new Buffer(extend, 'base64').toString('utf-8'));
       if (ext.authorizedScopes) {
         scopes = ext.authorizedScopes;
         from = 'ext.authorizedScopes';
