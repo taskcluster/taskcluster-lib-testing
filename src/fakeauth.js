@@ -12,13 +12,13 @@ exports.start = function(clients) {
     let body = JSON.parse(requestBody);
     let scopes = [];
     let from = 'client config';
-    let extend = null;
+    let ext = null;
     let clientId = null;
     if (body.authorization) {
       let authorization = hawk.utils.parseAuthorizationHeader(body.authorization);
       clientId = authorization.id;
       scopes = clients[clientId] || [];
-      extend = authorization.ext;
+      ext = authorization.ext;
     }
     else {
       // The following is a hacky reproduction of the bewit logic in
@@ -29,11 +29,11 @@ exports.start = function(clients) {
         let bewitParts = bewit.split('\\');
         clientId = bewitParts[0];
         scopes = clients[clientId];
-        extend = bewitParts[3] || '';
+        ext = bewitParts[3] || '';
       }
     }
-    if (extend) {
-      let ext = JSON.parse(new Buffer(extend, 'base64').toString('utf-8'));
+    if (ext) {
+      ext = JSON.parse(new Buffer(ext, 'base64').toString('utf-8'));
       if (ext.authorizedScopes) {
         scopes = ext.authorizedScopes;
         from = 'ext.authorizedScopes';
@@ -42,8 +42,11 @@ exports.start = function(clients) {
         from = 'ext.certificate.scopes';
       }
     }
-    debug("authenticating access to " + body.resource + " by " + clientId + " with scopes " + scopes.join(", ") + " from " + from);
-    return {status: "auth-success", scheme: "hawk", scopes: scopes, clientId: clientId};
+    debug("authenticating access to " + body.resource +
+          " by " + clientId +
+          " with scopes " + scopes.join(", ") +
+          " from " + from);
+    return {status: "auth-success", scheme: "hawk", scopes, clientId};
   });
 };
 
