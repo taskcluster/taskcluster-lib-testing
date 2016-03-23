@@ -34,10 +34,8 @@ var schemas = function(options) {
   assert(options.cases instanceof Array, "Array of cases must be given");
 
   var validator = null;
-  setup(function() {
-    return base.validator(options.validator).then(function(validator_) {
-      validator = validator_;
-    });
+  setup(async function() {
+    validator = await base.validator(options.validator);
   });
 
   // Create test cases
@@ -56,7 +54,7 @@ var schemas = function(options) {
       var schema = options.schemaPrefix + testCase.schema;
 
       // Validate json
-      var errors = validator.check(json, schema);
+      var errors = validator(json, schema);
 
       // Test errors
       if(testCase.success) {
