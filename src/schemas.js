@@ -4,7 +4,7 @@ var _             = require('lodash');
 var assert        = require('assert');
 var debug         = require('debug')('taskcluster-lib-testing:schemas');
 var fs            = require('fs');
-var base          = require('taskcluster-base');
+var validator     = require('taskcluster-lib-validate');
 var path          = require('path');
 /**
  * Test schemas with a positive and negative test cases. This will call
@@ -33,9 +33,9 @@ var schemas = function(options) {
   assert(options.validator, "Options must be given for validator");
   assert(options.cases instanceof Array, "Array of cases must be given");
 
-  var validator = null;
+  var validate = null;
   setup(async function() {
-    validator = await base.validator(options.validator);
+    validate = await validator(options.validator);
   });
 
   // Create test cases
@@ -54,17 +54,17 @@ var schemas = function(options) {
       var schema = options.schemaPrefix + testCase.schema;
 
       // Validate json
-      var errors = validator(json, schema);
+      var error = validate(json, schema);
 
       // Test errors
       if(testCase.success) {
-        if (errors !== null) {
+        if (error !== null) {
           debug("Errors: %j", errors);
         }
-        assert(errors === null,
+        assert(error === null,
                "Schema doesn't match test for " + testCase.path);
       } else {
-        assert(errors !== null,
+        assert(error !== null,
                "Schema matches unexpectedly test for " + testCase.path);
       }
     });
