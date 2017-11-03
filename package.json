@@ -32,7 +32,7 @@
     "slugid": "^1.0.3",
     "superagent": "3.8.0",
     "superagent-hawk": "0.0.6",
-    "taskcluster-client": "0.23.4",
+    "taskcluster-client": "3.0.3",
     "taskcluster-lib-validate": "^3.0.1",
     "uuid": "^3.1.0"
   },
