@@ -41,13 +41,6 @@ ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
 
-ajv@^4.0.4:
-  version "4.11.4"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.4.tgz#ebf3a55d4b132ea60ff5847ae85d2ef069960b45"
-  dependencies:
-    co "^4.6.0"
-    json-stable-stringify "^1.0.1"
-
 ajv@^4.8.2:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.8.tgz#82ffb02b29e662ae53bdc20af15947706739c536"
@@ -55,7 +48,7 @@ ajv@^4.8.2:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
-ajv@^5.2.0, ajv@^5.2.3:
+ajv@^5.2.0, ajv@^5.2.3, ajv@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.3.0.tgz#4414ff74a50879c208ee5fdc826e32c303549eda"
   dependencies:
@@ -168,21 +161,7 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-aws-sdk@^2.2.28, aws-sdk@^2.2.38:
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.25.0.tgz#8320cd1d9e08900df62d7cfe4a348f09d70e9897"
-  dependencies:
-    buffer "4.9.1"
-    crypto-browserify "1.0.9"
-    jmespath "0.15.0"
-    querystring "0.2.0"
-    sax "1.1.5"
-    url "0.10.3"
-    uuid "3.0.0"
-    xml2js "0.4.15"
-    xmlbuilder "2.6.2"
-
-aws-sdk@^2.5.3:
+aws-sdk@^2.142.0, aws-sdk@^2.5.3:
   version "2.144.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.144.0.tgz#14d8179bb44971b08426c63a1cc5f63dc09389e7"
   dependencies:
@@ -196,6 +175,20 @@ aws-sdk@^2.5.3:
     uuid "3.1.0"
     xml2js "0.4.17"
     xmlbuilder "4.2.1"
+
+aws-sdk@^2.2.28:
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.25.0.tgz#8320cd1d9e08900df62d7cfe4a348f09d70e9897"
+  dependencies:
+    buffer "4.9.1"
+    crypto-browserify "1.0.9"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.1.5"
+    url "0.10.3"
+    uuid "3.0.0"
+    xml2js "0.4.15"
+    xmlbuilder "2.6.2"
 
 aws-sign2@~0.5.0:
   version "0.5.0"
@@ -620,12 +613,19 @@ babel-runtime@^5.8.25:
   dependencies:
     core-js "^1.0.0"
 
-babel-runtime@^6.0.0, babel-runtime@^6.0.14, babel-runtime@^6.1.18, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.9.2:
+babel-runtime@^6.0.14, babel-runtime@^6.1.18, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.9.2:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
+
+babel-runtime@^6.26.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
 
 babel-template@^6.22.0, babel-template@^6.23.0:
   version "6.23.0"
@@ -1196,10 +1196,6 @@ espree@^3.5.1:
   dependencies:
     acorn "^5.1.1"
     acorn-jsx "^3.0.0"
-
-esprima@^3.1.1:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/esprima/-/esprima-3.1.3.tgz#fdca51cee6133895e3c88d535ce49dbff62a4633"
 
 esprima@^4.0.0:
   version "4.0.0"
@@ -1791,19 +1787,12 @@ js-tokens@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.1.tgz#08e9f132484a2c45a30907e9dc4d5567b7f114d7"
 
-js-yaml@^3.3.0, js-yaml@^3.9.1:
+js-yaml@^3.10.0, js-yaml@^3.3.0, js-yaml@^3.9.1:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
-
-js-yaml@^3.5.3:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.8.2.tgz#02d3e2c0f6beab20248d412c352203827d786721"
-  dependencies:
-    argparse "^1.0.7"
-    esprima "^3.1.1"
 
 jschardet@^1.4.2:
   version "1.6.0"
@@ -2352,6 +2341,10 @@ regenerator-runtime@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.3.tgz#8c4367a904b51ea62a908ac310bf99ff90a82a3e"
 
+regenerator-runtime@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.0.tgz#7e54fe5b5ccd5d6624ea6255c3473be090b802e1"
+
 regenerator-transform@0.9.8:
   version "0.9.8"
   resolved "https://registry.yarnpkg.com/regenerator-transform/-/regenerator-transform-0.9.8.tgz#0f88bb2bc03932ddb7b6b7312e68078f01026d6c"
@@ -2424,7 +2417,7 @@ restore-cursor@^2.0.0:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
 
-rimraf@^2.2.8:
+rimraf@^2.2.8, rimraf@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
   dependencies:
@@ -2893,19 +2886,20 @@ taskcluster-lib-scopes@^0.8.8:
   dependencies:
     babel-runtime "^5.8.25"
 
-taskcluster-lib-validate@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/taskcluster-lib-validate/-/taskcluster-lib-validate-1.1.1.tgz#c904bac7775e12f5b91a4fc1386e38d029d4bd92"
+taskcluster-lib-validate@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/taskcluster-lib-validate/-/taskcluster-lib-validate-3.0.1.tgz#100280e7137bb065bcb7c27570e23238a7781afd"
   dependencies:
-    ajv "^4.0.4"
+    ajv "^5.3.0"
     app-root-dir "^1.0.2"
-    aws-sdk "^2.2.38"
-    babel-runtime "^6.0.0"
-    debug "^2.2.0"
-    js-yaml "^3.5.3"
+    aws-sdk "^2.142.0"
+    babel-runtime "^6.26.0"
+    debug "^3.1.0"
+    js-yaml "^3.10.0"
     lodash "^4.5.1"
-    promise "^7.0.4"
-    url-join "^1.1.0"
+    promise "^8.0.1"
+    rimraf "^2.6.2"
+    url-join "^2.0.2"
     walk "^2.3.9"
 
 text-table@~0.2.0:
@@ -2998,9 +2992,9 @@ url-join@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-0.0.1.tgz#1db48ad422d3402469a87f7d97bdebfe4fb1e3c8"
 
-url-join@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/url-join/-/url-join-1.1.0.tgz#741c6c2f4596c4830d6718460920d0c92202dc78"
+url-join@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/url-join/-/url-join-2.0.2.tgz#c072756967ad24b8b59e5741551caac78f50b8b7"
 
 url-parse@1.0.x:
   version "1.0.5"
