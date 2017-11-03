@@ -1,7 +1,7 @@
 var _            = require('lodash');
 var nock         = require('nock');
 var hawk         = require('hawk');
-var request      = require('superagent-promise');
+var request      = require('superagent');
 var validator    = require('taskcluster-lib-validate');
 var API          = require('taskcluster-lib-api');
 var App          = require('taskcluster-lib-app');
@@ -95,13 +95,13 @@ suite('fakeauth', function() {
       request
         .get(reqUrl)
         .set('Authorization', header.field)
-        .end().then(function(res) {
+        .then(function(res) {
           console.log(res.body);
           return res;
         }),
       request
         .get(bewitUrl)
-        .end().then(function(res) {
+        .then(function(res) {
           console.log(res.body);
           return res;
         }),
