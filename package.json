@@ -19,8 +19,8 @@
     "url": "https://github.com/taskcluster/taskcluster-lib-testing.git"
   },
   "dependencies": {
-    "aws-sdk": "^2.2.28",
-    "azure-table-node": "1.4.1",
+    "aws-sdk": "^2.144.0",
+    "azure-table-node": "1.5.0",
     "babel-runtime": "^6.26.0",
     "debug": "^3.1.0",
     "express": "4.16.2",
