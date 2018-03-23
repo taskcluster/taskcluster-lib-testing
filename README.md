@@ -9,6 +9,45 @@ production code.
 
 See the source for detailed documentation.
 
+Sticky Loader
+-------------
+
+A sticky loader is a thin wrapper around `taskcluster-lib-loader` to support
+dependency injection. It "remembers" each value it has returned and will return
+it again on the next call; it can also have a dependency injected.  Use it like
+this in `helper.js`:
+
+```javascript
+const {stickyLoader} = require('taskcluster-lib-testing');
+const load = require('../src/server');
+
+exports.load = stickyLoader(load);
+
+setup(function() {
+  exports.load.reset();
+  exports.load.inject('profile', 'test');
+  exports.load.inject('process', 'test');
+});
+```
+
+then, in test scripts:
+
+```javascript
+const {load} = require('./helper');
+
+setup(async function() {
+  load.inject('cfg', { /* fake config */});
+  const SomeTable = await load('SomeTable');
+  await SomeTable.create({ /* ... */ });
+});
+
+test(async function() {
+  const component = await load('some-component');
+  // component will be loaded with the fake config and with
+  // the same instance of SomeTable that we set up above
+});
+```
+
 PulseTestReceiver
 -----------------
 
