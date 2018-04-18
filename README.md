@@ -23,30 +23,55 @@ const load = require('../src/server');
 
 exports.load = stickyLoader(load);
 
-setup(function() {
-  exports.load.reset();
+suiteSetup(await function() {
   exports.load.inject('profile', 'test');
   exports.load.inject('process', 'test');
+  await exports.load('cfg');
 });
 ```
 
-then, in test scripts:
+The `load.inject(component, value)` method sets a loader overwrite without
+attempting to load it. There is a corresponding `load.remove(component)` to
+remove a component.
+
+The last line of this `suiteSetup` is important: it loads the `cfg` component
+so that the configuration can be edited in-place (stickyLoader has special
+support for a component with this name).  If `cfg` is not loaded, the
+`load.cfg()` method will not work.
+
+In test scripts:
 
 ```javascript
 const {load} = require('./helper');
 
-setup(async function() {
-  load.inject('cfg', { /* fake config */});
-  const SomeTable = await load('SomeTable');
-  await SomeTable.create({ /* ... */ });
-});
+suite('SomeTable', function() {
+  suiteSetup(async function() {
+    load.save(); // save the state of the loader to restore in tearDown
+    load.cfg('azure.accountName', 'inMemory'); // edit the cfg in-place
+    const SomeTable = await load('SomeTable');
+    await SomeTable.ensureTable({ /* ... */ });
+  });
 
-test(async function() {
-  const component = await load('some-component');
-  // component will be loaded with the fake config and with
-  // the same instance of SomeTable that we set up above
+  suiteTeardown(function() {
+    load.restore(); // restore the state of the loader
+  });
+
+  test(async function() {
+    const component = await load('some-component');
+    // some-component will be loaded with the same cfg and with
+    // the same instance of SomeTable that we set up above
+  });
 });
 ```
+
+The `load.save()` and `load.restore()` methods push and pull loader states in a
+stack, and are best used in setup/teardown methods to ensure that one suite
+does not "pollute" the loader state for the next.
+
+The `load.cfg(path, value)` method edits the `cfg` component in place, using a
+dotted path to specify the config value. The `save` and `restore` methods are
+careful to deep-copy `cfg` so that these in-place modifications affect only
+the current loader state.
 
 Secrets
 -------
