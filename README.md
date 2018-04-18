@@ -119,7 +119,7 @@ The secrets object has a few useful methods, all of which can only be called *af
 * `secrets.get(name)` -- returns an object containing the secret values by name, or throws an error if not avaialble
 * `secrets.mockSuite(title, [secrets], async function(mock) { .. })` -- run the given suite of tests both with and without mocks, skipping the real tests if all given secrets are not available.
   The `mock` parameter is true for the mock version, and false for the real version.
-  If `$NO_SKIP_TESTS` is set, then this will throw an error for each test when secrets are not available.
+  If `$NO_TEST_SKIP` is set, then this will throw an error for each test when secrets are not available.
 
 If a secret is defined in the loaded configuration, that value will be used even if the `env` key is also set.
 Secrets should not have any value set in `config.yml`, or this class will not function properly.

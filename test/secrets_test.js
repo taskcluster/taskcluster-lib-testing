@@ -146,7 +146,7 @@ suite('Secrets', function() {
       assert.deepEqual(testsRun, [true, false], 'expected both runs');
     });
   });
-  // NOTE: testing NO_SKIP_TESTS would generate a failed test, so we do not attempt to test that.
+  // NOTE: testing NO_TEST_SKIP would generate a failed test, so we do not attempt to test that.
 
   suite('_fetchSecrets', function() {
     const secrets = new Secrets({

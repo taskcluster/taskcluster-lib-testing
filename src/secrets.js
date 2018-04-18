@@ -87,8 +87,8 @@ class Secrets {
     suite(`${title} (real)`, function() {
       suiteSetup(function() {
         if (!secretList.every(name => that.have(name))) {
-          if (process.env.NO_SKIP_TESTS) {
-            throw new Error(`secrets missing and NO_SKIP_TESTS is set: ${secretList.join(' ')}`);
+          if (process.env.NO_TEST_SKIP) {
+            throw new Error(`secrets missing and NO_TEST_SKIP is set: ${secretList.join(' ')}`);
           }
           this.skip();
         }
