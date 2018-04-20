@@ -33,6 +33,7 @@ const stickyLoader = load => {
 
   // restore to the save point at the top of the stack
   sticky.restore = () => {
+    assert(stack.length > 0, 'unbalanced load.save/restore');
     overwrites = stack.pop();
   };
 

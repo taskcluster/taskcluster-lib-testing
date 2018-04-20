@@ -1,4 +1,4 @@
-const {Secrets} = require('../');
+const {Secrets, stickyLoader} = require('../');
 const assert = require('assert');
 const nock = require('nock');
 
@@ -20,29 +20,44 @@ suite('Secrets', function() {
   suiteSetup(clearEnv);
   suiteTeardown(resetEnv);
 
+  const loader = (component, overwrites) => {
+    if (component in overwrites) {
+      return overwrites[component];
+    }
+    assert(component !== 'cfg', 'unexpected load of cfg');
+    return Promise.resolve({component});
+  };
+  const sticky = stickyLoader(loader);
+
+  setup(function() {
+    sticky.save();
+  });
+
+  teardown(function() {
+    sticky.restore();
+  });
+
   suite('have / get', function() {
     let secrets;
     setup(function() {
       secrets = new Secrets({
         secretName: 'path/to/secret',
         secrets: {
-          envOnly: [
-            {env: 'PASS_IN_ENV'},
-          ],
-          cfgOnly: [
-            {cfg: 'cfgonly.pass', name: 'cfgonly'},
-          ],
-          envAndCfg: [
-            {env: 'PASS_IN_BOTH', cfg: 'both.pass'},
-          ],
+          envOnly: [{env: 'PASS_IN_ENV'}],
+          cfgOnly: [{cfg: 'cfgonly.pass', name: 'cfgonly'}],
+          envAndCfg: [{env: 'PASS_IN_BOTH', cfg: 'both.pass'}],
         },
+        load: sticky,
       });
       secrets._fetchSecrets = async () => {
         throw new Error('unexpected secrets fetch');
       };
+
+      sticky.inject('cfg', {});
     });
 
     test('with nothing', async function() {
+      sticky.inject('cfg', {});
       await secrets.setup();
       assert(!secrets.have('envOnly'));
       assert.throws(() => secrets.get('envOnly'));
@@ -52,8 +67,24 @@ suite('Secrets', function() {
       assert.throws(() => secrets.get('envAndCfg'));
     });
 
+    test('with no cfg properties', async function() {
+      secrets = new Secrets({
+        secretName: 'path/to/secret',
+        secrets: {
+          envOnly: [{env: 'PASS_IN_ENV'}],
+        },
+        load: sticky,
+      });
+
+      // note; the fake loader above fails if 'cfg' is loaded
+      await secrets.setup();
+      assert(!secrets.have('envOnly'));
+      assert.throws(() => secrets.get('envOnly'));
+    });
+
     test('with config', async function() {
-      await secrets.setup({cfgonly: {pass: 'PP'}, both: {pass: 'P2'}});
+      sticky.inject('cfg', {cfgonly: {pass: 'PP'}, both: {pass: 'P2'}});
+      await secrets.setup();
       assert(!secrets.have('envOnly'));
       assert.throws(() => secrets.get('envOnly'));
       assert(secrets.have('cfgOnly'));
@@ -65,6 +96,7 @@ suite('Secrets', function() {
     test('with env', async function() {
       process.env.PASS_IN_ENV = 'PIE';
       process.env.PASS_IN_BOTH = 'PIB';
+      sticky.inject('cfg', {});
       await secrets.setup();
       assert(secrets.have('envOnly'));
       assert.deepEqual(secrets.get('envOnly'), {PASS_IN_ENV: 'PIE'});
@@ -76,6 +108,7 @@ suite('Secrets', function() {
 
     test('with env via secrets service', async function() {
       secrets._fetchSecrets = async () => ({PASS_IN_ENV: 'PIE', PASS_IN_BOTH: 'PIB'});
+      sticky.inject('cfg', {});
       await secrets.setup();
       assert(secrets.have('envOnly'));
       assert.deepEqual(secrets.get('envOnly'), {PASS_IN_ENV: 'PIE'});
@@ -88,7 +121,8 @@ suite('Secrets', function() {
     test('with env and config', async function() {
       process.env.PASS_IN_ENV = 'PIE';
       process.env.PASS_IN_BOTH = 'PIB';
-      await secrets.setup({cfgonly: {pass: 'PP'}, both: {pass: 'P2'}});
+      sticky.inject('cfg', {cfgonly: {pass: 'PP'}, both: {pass: 'P2'}});
+      await secrets.setup();
       assert(secrets.have('envOnly'));
       assert.deepEqual(secrets.get('envOnly'), {PASS_IN_ENV: 'PIE'});
       assert(secrets.have('cfgOnly'));
@@ -105,16 +139,13 @@ suite('Secrets', function() {
       secrets: {
         sec: [{name: 'sec'}],
       },
+      load: sticky,
     });
     let testsRun = [];
 
-    suiteSetup(async function() {
-      await secrets.setup();
-    });
-
-    secrets.mockSuite('outer', ['sec'], function(secrets) {
+    secrets.mockSuite('outer', ['sec'], function(mock) {
       test('inner', () => {
-        testsRun.push(secrets);
+        testsRun.push(mock);
       });
     });
 
@@ -129,11 +160,12 @@ suite('Secrets', function() {
       secrets: {
         sec: [{name: 'sec', cfg: 'sec'}],
       },
+      load: sticky,
     });
     let testsRun = [];
 
-    suiteSetup(async function() {
-      await secrets.setup({sec: 'here'});
+    suiteSetup(function() {
+      sticky.inject('cfg', {sec: 'here'});
     });
 
     secrets.mockSuite('outer', ['sec'], function(secrets) {
