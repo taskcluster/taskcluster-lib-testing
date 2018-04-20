@@ -93,6 +93,13 @@ suite('Secrets', function() {
       assert.deepEqual(secrets.get('envAndCfg'), {PASS_IN_BOTH: 'P2'});
     });
 
+    test('have with a false value', async function() {
+      sticky.inject('cfg', {cfgonly: {pass: false}});
+      await secrets.setup();
+      assert(secrets.have('cfgOnly'));
+      assert.deepEqual(secrets.get('cfgOnly'), {cfgonly: false});
+    });
+
     test('with env', async function() {
       process.env.PASS_IN_ENV = 'PIE';
       process.env.PASS_IN_BOTH = 'PIB';

@@ -38,7 +38,7 @@ class Secrets {
             cfg = await this.load('cfg');
           }
           const value = _.get(cfg, secret.cfg);
-          if (value) {
+          if (value !== undefined) {
             secret.value = value;
             continue;
           }
@@ -70,7 +70,7 @@ class Secrets {
     assert(this._setupComplete, 'must call secrets.setup() in a setup function first, or use mockSuite');
     assert(this.secrets[secret], `no such secret ${secret}`);
     const secrets = this.secrets[secret];
-    return secrets.every(secret => !!secret.value);
+    return secrets.every(secret => 'value' in secret);
   }
 
   get(secret) {
@@ -80,7 +80,7 @@ class Secrets {
     const result = {};
 
     secrets.forEach(secret => {
-      assert(secret.value, `no value found for secret ${secret.name}`);
+      assert('value' in secret, `no value found for secret ${secret.name}`);
       result[secret.name] = secret.value;
     });
 
