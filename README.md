@@ -98,15 +98,15 @@ exports.secrets = new Secrets({
      {env: 'AWS_SECRET_ACCESS_KEY', cfg: 'aws.secretAccessKey'},
    ],
   },
-);
+});
 ```
 
 Then, in a global, async `setup` function, set it up (using a sticky loader):
 
 ```javascript
 suiteSetup(async function() {
-  const cfg = await load('cfg');
-  await exports.secrets.setup({cfg});
+  const cfg = await exports.load('cfg');
+  await exports.secrets.setup(cfg);
 });
 ```
 
@@ -152,15 +152,18 @@ exports.load = load;
 const {secrets, load} = require('./helper');
 
 secrets.mockSuite('pingdom updates', ['pingdom'], function(mock) {
-  const pingdomUpdater = new PingdomUpdater({apiKey: mock ? 'pretendKey' : secrets.get('pingdom').apiKey});
-  if (mock) {
-    suiteSetup(function() {
-      nock('https://pingdom.com:443', ..); // mock out Pingdom API
-    });
-    suiteTeardown(function() {
-      nock.clearAll();
-    });
-  }
+  let pingdomUpdater;
+  suiteSetup(function() {
+    pingdomUpdater = new PingdomUpdater({apiKey: mock ? 'pretendKey' : secrets.get('pingdom').apiKey});
+    if (mock) {
+      suiteSetup(function() {
+        nock('https://pingdom.com:443', ..); // mock out Pingdom API
+      });
+      suiteTeardown(function() {
+        nock.clearAll();
+      });
+    }
+  });
 
   test('updates once', function() { .. });
 });
