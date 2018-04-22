@@ -22,12 +22,8 @@ const {stickyLoader} = require('taskcluster-lib-testing');
 const load = require('../src/server');
 
 exports.load = stickyLoader(load);
-
-suiteSetup(await function() {
-  exports.load.inject('profile', 'test');
-  exports.load.inject('process', 'test');
-  await exports.load('cfg');
-});
+exports.load.inject('profile', 'test');
+exports.load.inject('process', 'test');
 ```
 
 The `load.inject(component, value)` method sets a loader overwrite without
