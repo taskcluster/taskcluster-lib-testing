@@ -92,8 +92,8 @@ class Secrets {
 
     suite(`${title} (mock)`, function() {
       suiteSetup(async function() {
-        that.load.save();
         await that.setup();
+        that.load.save();
       });
 
       fn(true);
@@ -105,8 +105,8 @@ class Secrets {
 
     suite(`${title} (real)`, function() {
       suiteSetup(async function() {
-        that.load.save();
         await that.setup();
+        that.load.save();
 
         if (!secretList.every(name => that.have(name))) {
           if (process.env.NO_TEST_SKIP) {
