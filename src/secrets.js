@@ -89,14 +89,16 @@ class Secrets {
 
   mockSuite(title, secretList, fn) {
     const that = this;
+    let skipping = false;
 
     suite(`${title} (mock)`, function() {
       suiteSetup(async function() {
+        skipping = false;
         await that.setup();
         that.load.save();
       });
 
-      fn.call(this, true);
+      fn.call(this, true, () => skipping);
 
       suiteTeardown(function() {
         that.load.restore();
@@ -112,7 +114,10 @@ class Secrets {
           if (process.env.NO_TEST_SKIP) {
             throw new Error(`secrets missing and NO_TEST_SKIP is set: ${secretList.join(' ')}`);
           }
+          skipping = true;
           this.skip();
+        } else {
+          skipping = false;
         }
 
         // update the loader's cfg for every secret that has a cfg property; this will be restored
@@ -126,7 +131,7 @@ class Secrets {
         });
       });
 
-      fn.call(this, false);
+      fn.call(this, false, () => skipping);
 
       suiteTeardown(function() {
         that.load.restore();

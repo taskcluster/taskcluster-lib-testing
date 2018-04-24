@@ -116,11 +116,28 @@ The secrets object has a few useful methods, all of which can only be called *af
 ## mockSuite
 
 The `secrets.mockSuite` function abstracts away the most common case: running the same tests in a mock and real environment, skipping the real tests if secrets are not available.
-It is called as `secrets.mockSuite(title, [secrets], async function(mock) { .. })` in the same location you might call Mocha's `suite(..)`.
+It is called as `secrets.mockSuite(title, [secrets], async function(mock, skipping) { .. })` in the same location you might call Mocha's `suite(..)`.
 The `secrets` is an array of secret names required to run this suite in a real environment.
 The given function should define the suite, and can include `setup`, `suiteSetup`, and so on.
 The `mock` parameter is true for the mock version, and false for the real version.
 If `$NO_TEST_SKIP` is set, `mockSuite` will throw an error when secrets are not available.
+
+Note that Mocha continues to run `setupSuite` and `teardownSuite` functions even after a suite has been skipped.
+Mocha does not provide any way to determine if a suite has been skipped.
+Use `skipping()` to determine if the suite is currently skipping, and avoid doing initialization that will fail.
+
+Note, too, that all modern versions of Mocha have [a bug](https://github.com/mochajs/mocha/issues/2819) causing nested suites to run anyway, even when the parent suite is skipped.
+A quick (but unfortunate) way to work around this bug is
+
+```javascript
+suite('mySuite', function() {
+  suiteSetup(function() {
+    if (skipping()) {
+      this.skip();
+    }
+  });
+});
+```
 
 ### Usage
 
@@ -152,7 +169,7 @@ exports.load = load;
 const {secrets, load} = require('./helper');
 
 // for testing by passing secrets to the subject..
-secrets.mockSuite('pingdom updates', ['pingdom'], function(mock) {
+secrets.mockSuite('pingdom updates', ['pingdom'], function(mock, skipping) {
   let pingdomUpdater, pingdomComponent;
 
   suiteSetup(async function() {
@@ -183,8 +200,10 @@ secrets.mockSuite('Floobits', ['taskcluster'], function(mock) {
       helper.load.cfg('azure.accountName', 'inMemory');
     }
     
-    Floobits = await helper.load('Floobits');
-    await Floobits.ensureTable();
+    if (!skipping()) {
+      Floobits = await helper.load('Floobits');
+      await Floobits.ensureTable();
+    }
   });
 
   test('create', async function() {
