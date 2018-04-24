@@ -96,7 +96,7 @@ class Secrets {
         that.load.save();
       });
 
-      fn(true);
+      fn.call(this, true);
 
       suiteTeardown(function() {
         that.load.restore();
@@ -126,7 +126,7 @@ class Secrets {
         });
       });
 
-      fn(false);
+      fn.call(this, false);
 
       suiteTeardown(function() {
         that.load.restore();
