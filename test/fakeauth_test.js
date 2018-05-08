@@ -10,10 +10,13 @@ var assert       = require('assert');
 var taskcluster  = require('taskcluster-client');
 var Promise      = require('promise');
 var path         = require('path');
+var urls         = require('taskcluster-lib-urls');
 
 var testApi = new API({
   title:        'Test Server',
   description:  'for testing',
+  name:         'test',
+  version:      'v1',
 });
 
 testApi.declare({
@@ -50,11 +53,13 @@ suite('fakeauth', function() {
         env:            'development',
         forceSSL:       false,
         trustProxy:     false,
+        rootDocsLink:   false,
       });
 
       // Create router for the API
       var router =  testApi.router({
-        validator:          validator,
+        validator: validator,
+        rootUrl: urls.testRootUrl(),
       });
 
       // Mount router

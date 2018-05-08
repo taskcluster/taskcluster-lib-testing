@@ -1,14 +1,18 @@
+var url = require('url');
 var debug = require('debug')('taskcluster-lib-testing:FakeAuth');
 var nock = require('nock');
 var hawk = require('hawk');
 var url  = require('url');
 var taskcluster  = require('taskcluster-client');
+var urls = require('taskcluster-lib-urls');
 
 exports.start = function(clients) {
-  nock('https://auth.taskcluster.net:443', {encodedQueryParams:true, allowUnmocked: true})
+  const rootUrl = urls.testRootUrl();
+  const authPath = url.parse(urls.api(rootUrl, 'auth', 'v1', '/authenticate-hawk')).pathname;
+  nock(rootUrl, {encodedQueryParams:true, allowUnmocked: true})
     .persist()
     .filteringRequestBody(/.*/, '*')
-    .post('/v1/authenticate-hawk', '*')
+    .post(authPath, '*')
     .reply(200, function(uri, requestBody) {
       let body = JSON.parse(requestBody);
       let scopes = [];

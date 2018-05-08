@@ -294,10 +294,13 @@ A fake for the auth service to support testing APIs without requiring
 production credentials, using Nock.
 
 This object intercepts requests to the auth service's `authenticateHawk` method
-and return a response based on the given `clients`, instead. Note that
+and returns a response based on the given `clients`, instead. Note that
 accessTokens are not checked -- the fake simply controls access based on
 clientId or the scopes in a temporary credential or supplied with
 authorizedScopes.
+
+This fakes the auth service on the test rootUrl as given by
+taskcluster-lib-urls. Any APIs being tested should be configured similarly.
 
 To start the mock, call `testing.fakeauth.start(clients)` in your suite's
 `setup` method. Clients has the form
