@@ -36,7 +36,7 @@ testApi.declare({
 });
 
 suite('fakeauth', function() {
-  var fakeauth = require('../lib/fakeauth');
+  var fakeauth = require('../src/fakeauth');
   var server;
 
   suiteSetup(function() {
