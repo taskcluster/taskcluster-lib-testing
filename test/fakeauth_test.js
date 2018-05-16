@@ -4,7 +4,7 @@ var nock         = require('nock');
 var hawk         = require('hawk');
 var request      = require('superagent');
 var libValidate  = require('taskcluster-lib-validate');
-var API          = require('taskcluster-lib-api');
+var APIBuilder   = require('taskcluster-lib-api');
 var App          = require('taskcluster-lib-app');
 var assert       = require('assert');
 var taskcluster  = require('taskcluster-client');
@@ -12,14 +12,14 @@ var Promise      = require('promise');
 var path         = require('path');
 var libUrls      = require('taskcluster-lib-urls');
 
-var testApi = new API({
+var builder = new APIBuilder({
   title:        'Test Server',
   description:  'for testing',
   name:         'test',
   version:      'v1',
 });
 
-testApi.declare({
+builder.declare({
   method:       'get',
   route:        '/test',
   name:         'test',
@@ -51,7 +51,7 @@ suite('fakeauth', function() {
     });
 
     // Create router for the API
-    const router =  testApi.router({
+    const api = await builder.build({
       validator: validator,
       rootUrl,
     });
@@ -63,8 +63,8 @@ suite('fakeauth', function() {
       forceSSL:       false,
       trustProxy:     false,
       rootDocsLink:   false,
-      serviceName:    'lib-testing',
-      routers:        {v1: router},
+      serviceName:    'test',
+      apis:           [api],
     });
 
     // Time out connections after 500 ms, prevents tests from hanging
@@ -81,7 +81,7 @@ suite('fakeauth', function() {
 
   var callApi = (clientId, extContent) => {
     // We'll call both with auth headers and bewit
-    var reqUrl = libUrls.api(rootUrl, 'lib-testing', 'v1', 'test');
+    var reqUrl = libUrls.api(rootUrl, 'test', 'v1', 'test');
     var content = {
       ttlSec: 60 * 5,
       credentials: {
@@ -129,7 +129,7 @@ suite('fakeauth', function() {
     return callApi('unconfiguredClient')
       .then(() => {assert(false, 'should have failed');})
       .catch(function(err) {
-        assert(err.status === 401, 'wrong error code returned');
+        assert.equal(err.status, 401, 'wrong error code returned');
       });
   });
 
