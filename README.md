@@ -299,11 +299,8 @@ accessTokens are not checked -- the fake simply controls access based on
 clientId or the scopes in a temporary credential or supplied with
 authorizedScopes.
 
-This fakes the auth service on the test rootUrl as given by
-taskcluster-lib-urls. Any APIs being tested should be configured similarly.
-
-To start the mock, call `testing.fakeauth.start(clients)` in your suite's
-`setup` method. Clients has the form
+To start the mock, call `testing.fakeauth.start(clients, {rootUrl})` in your suite's
+`setup` method. The first argument has the form
 
 ```js
 {
@@ -311,6 +308,10 @@ To start the mock, call `testing.fakeauth.start(clients)` in your suite's
  "clientId2": ["scope1", "scope3"],
 }
 ```
+
+The auth service on the cluster identified by `rootUrl` will be faked. When
+used to test an API in a microservice, this is same as the root URL for the
+fake web server -- `http://localhost:1234` or something of that sort.
 
 Call `testing.fakeauth.stop()` in your test suite's `teardown` method to stop the HTTP interceptor.
 
