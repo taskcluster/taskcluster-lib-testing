@@ -329,3 +329,10 @@ poll for the expected state.
 
 The `poll` function will repeatedly call a function that returns a promise
 until the promise is resolved without errors.
+
+```javascript
+await poll(
+  maybeFunc, // function to be called
+  11,        // max times to try it
+  100);      // delay (ms) between tries
+```
