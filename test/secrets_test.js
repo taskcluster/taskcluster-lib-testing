@@ -117,6 +117,7 @@ suite('Secrets', function() {
       assert.throws(() => secrets.get('cfgOnly'));
       assert(secrets.have('envAndCfg'));
       assert.deepEqual(secrets.get('envAndCfg'), {PASS_IN_BOTH: 'PIB'});
+      assert(!process.env.PASS_IN_ENV, '$PASS_IN_ENV is still set');
     });
 
     test('with env via secrets service', async function() {
@@ -129,6 +130,7 @@ suite('Secrets', function() {
       assert.throws(() => secrets.get('cfgOnly'));
       assert(secrets.have('envAndCfg'));
       assert.deepEqual(secrets.get('envAndCfg'), {PASS_IN_BOTH: 'PIB'});
+      assert(!process.env.PASS_IN_ENV, '$PASS_IN_ENV is set');
     });
 
     test('with env and config', async function() {
@@ -143,6 +145,7 @@ suite('Secrets', function() {
       assert(secrets.have('envAndCfg'));
       // NOTE: this prefers the config value!
       assert.deepEqual(secrets.get('envAndCfg'), {PASS_IN_BOTH: 'P2'});
+      assert(!process.env.PASS_IN_ENV, '$PASS_IN_ENV is set');
     });
   });
 
