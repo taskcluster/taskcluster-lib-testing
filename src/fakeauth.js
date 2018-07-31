@@ -14,7 +14,10 @@ exports.start = function(clients, {rootUrl}={}) {
     .filteringRequestBody(/.*/, '*')
     .post(authPath, '*')
     .reply(200, function(uri, requestBody) {
-      let body = JSON.parse(requestBody);
+      let body = requestBody;
+      if (typeof requestBody !== 'object') {
+        body = JSON.parse(requestBody);
+      }
       let scopes = [];
       let from = 'client config';
       let ext = null;
